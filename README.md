@@ -1,7 +1,7 @@
 # revolutionary-networks
 This is a public dataset of metadata pulled from documents from the University of Virginia Press's [Rotunda American History Collection][https://www.upress.virginia.edu/rotunda/], covering the period of 1771-1783. This data has been released in association with a grant from the National Endowment for the Humanities, for which we will create a website exploring data visualisations of networks of communication through the revolutionary war. If you use this data for your research and want it included as a link on this website, contact [rotunda-upress@virginia.edu][rotunda-upress@virginia.edu]. 
 
-##Available Metadata
+##Available Metadata##
 Document ID: Official identifer for within the Rotunda American History Collection
 Title: Title of document, as appearing in the source book volume or digital edition
 Author: Author of document
@@ -25,7 +25,7 @@ admin1: Administrative area, level 1, from the reconciled Geonames.org entry
 admin2: Adminstrative area, level 2, from the reconciled Geonames.org entry
 hierarchy: Full breadcrumb for location, from the reconciled Geonames.org entry
 
-##Collections Represented, by Proportion of Dataset, having content from Jan 1, 1771 through Dec 31, 1783
+##Collections Represented, by Proportion of Dataset, having content from Jan 1, 1771 through Dec 31, 1783##
 The Papers of George Washington - GEWN - (University of Virginia Press) 15581 documents
 The Papers of Benjamin Franklin - BNFN - (Yale University Press) 9518 documents
 The Adams Family Papers - ADMS - (Massachusetts Historical Society) 4745 documents
