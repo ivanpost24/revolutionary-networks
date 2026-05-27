@@ -25,16 +25,16 @@ This is a public dataset of metadata pulled from documents from the University o
 * admin2: Adminstrative area, level 2, from the reconciled Geonames.org entry
 * hierarchy: Full breadcrumb for location, from the reconciled Geonames.org entry
 
-## Collections Represented, by Proportion of Dataset, having content from Jan 1, 1771 through Dec 31, 1783
+## Collections Represented, by Proportion of Dataset, having content from Jan 1, 1771 through Dec 31, 1783. Including Publication code, number of documents, and original publisher and copyright holder of the volume containing the source material. 
 * The Papers of George Washington - GEWN - (University of Virginia Press) 15581 documents
 * The Papers of Benjamin Franklin - BNFN - (Yale University Press) 9518 documents
 * The Adams Family Papers - ADMS - (Massachusetts Historical Society) 4745 documents
 * The Papers of Thomas Jefferson - TSJN - (Princeton Univeristy Press and Monticello) 2542 documents
 * The Papers of James Madison - JSMN - (University of Virginia Press) 831 documents
-* The Selected Papers of John Jay - JNJY - () 765 documents
-* The Papers of Alexander Hamilton - ARHN - () 742 documents
-* The Papers of Eliza Lucas Pinckney and Harriott Pinckney Horry : Digital Edition - PIHO - (University of Virginia Press) 219 documents
-* PNKY 174 documents
-* The Letters of Benjamin Rush 139 documents
-* The Documentary History of the Ratification of the Constitution - 13 documents
-* John Marshall 10 documents
+* The Selected Papers of John Jay - JNJY - (The Trustees of Columbia University in the City of New York) 765 documents
+* The Papers of Alexander Hamilton - ARHN - (Columbia University Press) 742 documents
+* The Papers of Eliza Lucas Pinckney and Harriott Pinckney Horry : Digital Edition - PIHO - (University of Virginia Press, Rotunda Digital Imprint) 219 documents
+* The Papers of the Revolutionary Era Pinckney Statesmen Digital Edition - PNKY - (University of Virginia Press, Rotunda Digital Imprint) 174 documents
+* The Letters of Benjamin Rush - RUSH - (American Philosophical Society) 139 documents
+* The Documentary History of the Ratification of the Constitution - RNCN - (The State Historical Society of Wisconsin) 13 documents
+* John Marshall - JNML - (The University of North Carolina Press) 10 documents
