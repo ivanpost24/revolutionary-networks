@@ -1,7 +1,7 @@
 # revolutionary-networks
-This is a public dataset of metadata pulled from documents from the University of Virginia Press's [Rotunda American History Collection](https://www.upress.virginia.edu/rotunda/), covering the period of 1771-1783. This data has been released in association with a grant from the National Endowment for the Humanities, for which we will create a website exploring data visualisations of networks of communication through the revolutionary war. If you use this data for your research and want it included as a link on this website, contact [rotunda-upress@virginia.edu](mailto:rotunda-upress@virginia.edu).
+This is a public dataset of metadata created from documents from the University of Virginia Press's [Rotunda American History Collection](https://www.upress.virginia.edu/rotunda/), covering the period of 1771-1783. This data has been released in association with a grant from the National Endowment for the Humanities, for which we will create a website exploring data visualisations of networks of communication through the revolutionary war. If you use this data for your research and want it included as a link on this website, contact [rotunda-upress@virginia.edu](mailto:rotunda-upress@virginia.edu).
 
-## Available Metadata, pulled from 40,691 documents
+## Available Metadata, pulled from 40,691 documents. This data has been created by Rotunda and does not include any transcripts from the actual letters. 
 * Document ID: Official identifer for within the Rotunda American History Collection
 * Title: Title of document, as appearing in the source book volume or digital edition
 * Author: Author of document
