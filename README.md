@@ -23,6 +23,7 @@ This is a public dataset of metadata created from documents from the University 
 * admin1: Administrative area, level 1, from the reconciled Geonames.org entry
 * admin2: Adminstrative area, level 2, from the reconciled Geonames.org entry
 * hierarchy: Full breadcrumb for location, from the reconciled Geonames.org entry
+* verified: Boolean indicating whether the location entry was *manually* verified to be correct
 
 ## Collections Represented, by Proportion of Dataset, having content from Jan 1, 1771 through Dec 31, 1783. Including Publication code, number of documents, and original publisher and copyright holder of the volume containing the source material. 
 * The Papers of George Washington - GEWN - (University of Virginia Press) 15581 documents
