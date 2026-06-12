@@ -14,11 +14,15 @@ PyInstaller. The script provides ample help functionality on its own which you c
     ```shell
     pip install -r requirements.txt
     ```
-2. Run the `revnet-verify.py` script with
-    ```shell
-    python3 revnet-verify.py [arguments]
-    ```
-   
+2. Run the script with
+   ```shell
+   revnet-verify [arguments]
+   ```
+   or
+   ```shell
+   python3 revnet-verify.py [arguments]
+   ```
+
 ### Build an executable with PyInstaller
 1. Install all the dependencies in `requirements.txt` with
     ```shell
@@ -26,9 +30,9 @@ PyInstaller. The script provides ample help functionality on its own which you c
     ```
 2. Install PyInstaller with
     ```shell
-    pip install pyinstaller 
+    pip install pyinstaller
     ```
-3. Run the PyInstaller program on `revnet-verify.py`:
+3. Run the PyInstaller program on `revnet_verify.py`:
     ```shell
     pyinstaller revnet-verify.py
     ```
