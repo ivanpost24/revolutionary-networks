@@ -13,8 +13,7 @@ This is a public dataset of metadata created from documents from the University 
 * authorIDs: Associated ID for person, pulled from Rotunda's [People of The Founding Era prosopography database](https://pfe.upress.virginia.edu). (*Note* In Review)
 * recipientIDs: Associated ID for person, pulled from Rotunda's [People of The Founding Era prosopography database](https://pfe.upress.virginia.edu). (*Note* In Review)
 * Orig Dateline: Dateline element pulled from document transcription, source of associated locations, where available
-* Location: Through several levels of human and machine processing, the location selected for the origin of the document. 
-* Revised Location: Administrative field, indicating any changes to location during editing
+* Location: Through several levels of human and machine processing, the location selected for the origin of the document.
 * geonameID: The returned ID for the geoname entry matching to the value in the location field. [https://www.geonames.org/](https://www.geonames.org/)
 * coordinates: Combined GPS coordinates, from the reconciled Geonames.org entry
 * latitude: latitude, from the reconciled Geonames.org entry
