@@ -149,12 +149,15 @@ def verify(
     if 'verified' in merged_data.columns:
         merged_data = merged_data[~merged_data['verified']]
 
-    disable = set(name.lower() for name in disable)
-    if not disable.issubset(verifications.keys()):
-        invalid_issue_types = disable - verifications.keys()
-        print('unrecognized issue types:', ', '.join(invalid_issue_types), file=sys.stderr)
-        sys.exit(1)
-    verifications_used = {name: verifications[name] for name in verifications.keys() - disable}
+    if disable is not None:
+        disable = set(name.lower() for name in disable)
+        if not disable.issubset(verifications.keys()):
+            invalid_issue_types = disable - verifications.keys()
+            print('unrecognized issue types:', ', '.join(invalid_issue_types), file=sys.stderr)
+            sys.exit(1)
+        verifications_used = {name: verifications[name] for name in verifications.keys() - disable}
+    else:
+        verifications_used = verifications
 
     for index, entry in merged_data.iterrows():
         for verification_name, verification_func in verifications_used.items():
