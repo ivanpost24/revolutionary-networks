@@ -1,3 +1,5 @@
+"""Verification functions."""
+
 import re
 from collections.abc import Callable
 from difflib import SequenceMatcher
@@ -18,6 +20,18 @@ verifications: dict[str, Verifier] = {}
 
 
 def register(name: str) -> Callable[[Verifier], Verifier]:
+    """
+    Decorator factory which registers a verification function to the registry.
+
+    A verification function must take a pandas Series as its only positional argument containing the row to check and
+    return either None (on success) or an error message (on failure).
+
+    So that the "describe" command is useful, you should also provide a docstring.
+
+    :param name: Name of the verification function. These are printed to the standard output so the user can filter by
+       issue type, and a user can disable this function by specifying this name on the command line.
+    :return: A decorator which registers the provided verification function to the registry.
+    """
     if name in verifications:
         raise ValueError(f'Verification {name} already registered')
 

@@ -1,3 +1,6 @@
+"""Utility functions for dealing with the Location column in Revolutionary Networks data."""
+
+
 import re
 
 
@@ -6,6 +9,7 @@ STATE_OR_COUNTRY_PATTERN = re.compile(r'.*\[(.+)]$')
 
 
 def get_state_or_country(loc: str) -> str | None:
+    """Get the state or country string from the given Revolutionary Networks location string."""
     if not isinstance(loc, str):
         return None
     match = STATE_OR_COUNTRY_PATTERN.match(loc)
@@ -73,9 +77,11 @@ CORRESPONDING_COUNTRY_CODES = {
 }
 
 
-def get_country_code(loc: str) -> list[str]:
-    return CORRESPONDING_COUNTRY_CODES.get(loc, [])
+def get_country_code(state_or_country: str) -> list[str]:
+    """Get possible country codes given the state/country part of a Revolutionary Networks location string."""
+    return CORRESPONDING_COUNTRY_CODES.get(state_or_country, [])
 
 
 def get_location_name(loc: str) -> str:
+    """Get the primary location (city or county) name from the given Revolutionary Networks location string."""
     return loc.split('[')[0].strip().split(', ')[0]

@@ -1,3 +1,5 @@
+"""Functions for fetching Geonames data."""
+
 import numpy as np
 import pandas as pd
 
@@ -116,6 +118,20 @@ _geonames_country_codes = pd.DataFrame()
 
 
 def get_geonames_country_codes(force: bool = False, cache: bool = True) -> pd.DataFrame:
+    """
+    Get a DataFrame containing information about country codes used in the Geonames database. This is a long-running
+    operation and may require an Internet connection.
+
+    The function downloads the data from https://download.geonames.org/export/dump/countryInfo.txt.
+
+    This method will, by default, cache the database in the user directory to avoid contacting the servers every single
+    time. It will also fetch from this cache by default.
+
+    :param force: If `True`, then forces the function to fetch the data from the Internet, ignoring any cached
+       version (default: `False`).
+    :param cache: If `True`, cache the data in the program directory (default: `True`).
+    :return: A DataFrame containing information about country codes used in the Geonames database.
+    """
     global _geonames_country_codes
     if _geonames_country_codes.empty or force:
         _geonames_country_codes = _fetch_geonames_country_codes(force=force, cache=cache)
@@ -147,6 +163,22 @@ _geonames_admin1_info = pd.DataFrame()
 
 
 def get_geonames_admin1_info(force: bool = False, cache: bool = True) -> pd.DataFrame:
+    """
+    Get a DataFrame containing information about first-order administrative divisions used in the Geonames database.
+    This is a long-running operation and may require an Internet connection.
+
+    The function downloads the data from https://download.geonames.org/export/dump/admin1CodesASCII.txt and the
+    columns are specified in https://download.geonames.org/export/dump/readme.txt.
+
+    This method will, by default, cache the database in the user directory to avoid contacting the servers every single
+    time. It will also fetch from this cache by default.
+
+    :param force: If `True`, then forces the function to fetch the database from the Internet, ignoring any cached
+       version (default: `False`).
+    :param cache: If `True`, cache the database in the program directory (default: `True`).
+    :return: A DataFrame containing the information about first-order administrative divisions used in the Geonames
+       database.
+    """
     global _geonames_admin1_info
     if _geonames_admin1_info.empty or force:
         _geonames_admin1_info = _fetch_geonames_admin1_info(force=force, cache=cache)
@@ -179,6 +211,22 @@ _geonames_admin2_info = pd.DataFrame()
 
 
 def get_geonames_admin2_info(force: bool = False, cache: bool = True) -> pd.DataFrame:
+    """
+    Get a DataFrame containing information about second-order administrative divisions used in the Geonames database.
+    This is a long-running operation and may require an Internet connection.
+
+    The function downloads the data from https://download.geonames.org/export/dump/admin2Codes.txt and the columns are
+    specified in https://download.geonames.org/export/dump/readme.txt.
+
+    This method will, by default, cache the database in the user directory to avoid contacting the servers every single
+    time. It will also fetch from this cache by default.
+
+    :param force: If `True`, then forces the function to fetch the database from the Internet, ignoring any cached
+       version (default: `False`).
+    :param cache: If `True`, cache the database in the program directory (default: `True`).
+    :return: A DataFrame containing the information about first-order administrative divisions used in the Geonames
+       database.
+    """
     global _geonames_admin2_info
     if _geonames_admin2_info.empty or force:
         _geonames_admin2_info = _fetch_geonames_admin2_info(force=force, cache=cache)

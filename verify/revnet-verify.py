@@ -1,7 +1,6 @@
 import argparse
 import shutil
 import sys
-import textwrap
 from collections.abc import Sequence
 from functools import partial
 
@@ -16,7 +15,7 @@ from revnet_verify.geonames import (
     get_geonames_admin2_info,
 )
 from revnet_verify.progress import spinning_cursor
-from revnet_verify.rotunda import get_rotunda_data
+from revnet_verify.rotunda import get_revnet_data
 from revnet_verify.textwrapping import wrap_text
 from revnet_verify.verifications import verifications
 
@@ -121,7 +120,7 @@ def verify(
 ) -> None:
     """Subcommand which checks the validity of the Rotunda data file at the given path or URL."""
     progress.enabled = busy
-    data = get_rotunda_data(path_to_data)
+    data = get_revnet_data(path_to_data)
     data_with_geonames = data.dropna(subset=['geonameId'])
     data_with_geonames['geonameId'] = data_with_geonames['geonameId'].astype(np.uint64)
     documents_without_geonames = data.loc[
@@ -167,6 +166,9 @@ def list_issue_types() -> None:
 def describe(issue_type: str) -> None:
     if issue_type not in verifications:
         print(f'unrecognized issue type: {issue_type}', file=sys.stderr)
+        sys.exit(1)
+    elif verifications[issue_type].__doc__ is None:
+        print(f'no description found for issue type "{issue_type}"', file=sys.stderr)
         sys.exit(1)
     else:
         print(wrap_text(verifications[issue_type].__doc__, width=shutil.get_terminal_size().columns))

@@ -1,3 +1,5 @@
+"""Utility module to display a busy indicator."""
+
 import itertools
 import sys
 import threading
@@ -6,6 +8,7 @@ from contextlib import contextmanager
 
 
 enabled = True
+"""Global flag to enable/disable the busy indicators."""
 
 
 def _spinning_cursor_thread(

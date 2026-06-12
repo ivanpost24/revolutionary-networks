@@ -1,3 +1,5 @@
+"""Module for reading """
+
 from pathlib import Path
 
 import numpy as np
@@ -6,10 +8,10 @@ import pandas as pd
 from .progress import spinning_cursor
 
 
-@spinning_cursor('Loading Rotunda data')
-def get_rotunda_data(path: str | Path) -> pd.DataFrame:
+@spinning_cursor('Loading Revolutionary Networks data')
+def get_revnet_data(path: str | Path) -> pd.DataFrame:
     """
-    Get Rotunda data at the provided path and return it in a DataFrame.
+    Get Revolutionary Networks data at the provided path and return it in a DataFrame.
 
     The DataFrame columns are as follows::
 

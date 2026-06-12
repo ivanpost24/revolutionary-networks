@@ -1,3 +1,5 @@
+"""Support package for the revnet-verify script."""
+
 from pathlib import Path
 
 

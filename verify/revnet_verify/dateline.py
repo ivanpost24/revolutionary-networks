@@ -1,7 +1,9 @@
-# Defines various spellings of each month in the Gregorian calendar used in the dataset. This is not meant to be
-# a complete list, but it should cover a majority of cases.
+"""Provides a single function which helps process datelines."""
+
 import re
 
+# Defines various spellings of each month in the Gregorian calendar used in the dataset. This is not meant to be
+# a complete list, but it should cover a majority of cases.
 MONTH_NAMES = {
     1: [
         'january',
@@ -168,5 +170,9 @@ START_OF_DATE_PATTERN = re.compile(
 
 
 def get_name_from_dateline(dateline: str) -> str:
+    """
+    Attempt to extract the name of the place within a dateline.  This doesn't work 100% of the time but is generally
+    good at removing dates.
+    """
     parts = [part.strip() for part in START_OF_DATE_PATTERN.split(dateline)]
     return parts[0] or parts[-1]

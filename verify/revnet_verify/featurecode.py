@@ -1,3 +1,5 @@
+"""Utility functions supporting Geonames feature codes."""
+
 FEATURE_CODE_MAP = {
     'A': {
         None: 'country, state, region, ...',
@@ -713,6 +715,7 @@ FEATURE_CODE_MAP = {
 
 
 def get_feature_code_name(feature_class: str, feature_code: str | None) -> str:
+    """Get an English name for the provided feature class and code."""
     if feature_class not in FEATURE_CODE_MAP:
         return 'unknown'
     feature_class_map = FEATURE_CODE_MAP[feature_class]
@@ -720,6 +723,9 @@ def get_feature_code_name(feature_class: str, feature_code: str | None) -> str:
 
 
 def get_feature_key(feature_class: str, feature_code: str | None) -> str:
+    """
+    Get the key used to uniquely identify feature codes in the featureCodes_en.txt file from a feature class and code.
+    """
     if feature_code is None:
         return f'{feature_class}.????'
     else:
