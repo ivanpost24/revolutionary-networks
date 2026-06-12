@@ -1,0 +1,7 @@
+# PyInstaller products
+build
+dist
+
+# Other Python stuff
+*.egg-info
+.venv
