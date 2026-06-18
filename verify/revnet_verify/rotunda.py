@@ -59,3 +59,16 @@ def get_revnet_data(path: str | Path) -> pd.DataFrame:
         data.drop(columns=['revised_location'], inplace=True)
     data['Date'] = pd.to_datetime(data['Date'], dayfirst=True, unit='D')
     return data
+
+
+def get_hierarchy_string(entry: pd.Series) -> str | float:
+    if pd.notna(country_name := entry['country_name']):
+        if pd.notna(admin1 := entry['admin1']):
+            if pd.notna(admin2 := entry['admin2']):
+                return f'{country_name} > {admin1} > {admin2}'
+            else:
+                return f'{country_name} > {admin1}'
+        else:
+            return country_name
+    else:
+        return np.nan

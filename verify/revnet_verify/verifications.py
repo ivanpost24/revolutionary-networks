@@ -213,8 +213,8 @@ def verify_recorded_country_name(entry: pd.Series) -> str | None:
 @register('recorded-admin1')
 def verify_recorded_admin1_name(entry: pd.Series) -> str | None:
     """
-    Verify that the recorded first-order administrative division name in the Location column matches the Geonames
-    entity's first-order administrative division, if it exists.
+    Verify that the recorded first-order administrative division name matches the Geonames entity's first-order
+    administrative division, if it exists.
     """
     if (
         entry['admin1'] == entry['admin1 name']
@@ -230,8 +230,25 @@ def verify_recorded_admin1_name(entry: pd.Series) -> str | None:
 @register('recorded-admin2')
 def verify_recorded_admin2_name(entry: pd.Series) -> str | None:
     """
-    Verify that the recorded second-order administrative division name in the Location column matches the Geonames
-    entity's second-order administrative division, if it exists.
+    Verify that the recorded second-order administrative division name matches the Geonames entity's second-order
+    administrative division, if it exists.
+    """
+    if (
+            entry['admin2'] == entry['admin2 name']
+            or pd.isna(entry['admin2'])
+            or pd.isna(entry['admin2 name'])
+    ):
+        return None
+    else:
+        return (f'recorded second-order administrative division name "{entry['admin2']}" does not match '
+                f'Geonames second-order administrative division name "{entry['admin2 name']}"')
+
+
+@register('recorded-hierarchy')
+def verify_recorded_hierarchy(entry: pd.Series) -> str | None:
+    """
+    Verify that the recorded administrative division hierarchy matches the Geonames entity's second-order
+    administrative division, if it exists.
     """
     if (
             entry['admin2'] == entry['admin2 name']

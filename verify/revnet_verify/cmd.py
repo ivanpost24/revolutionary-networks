@@ -15,7 +15,7 @@ from .geonames import (
     get_geonames_admin2_info,
 )
 from .progress import spinning_cursor
-from .rotunda import get_revnet_data
+from .rotunda import get_revnet_data, get_hierarchy_string
 from .textwrapping import wrap_text
 from .verifications import verifications
 
@@ -43,13 +43,14 @@ problems.
 
 The program will examine the provided Revolutionary Networks data file for issues.  These will all be logged to the
 standard output, with the spreadsheet row, document ID, a string identifying the type of issue, and an explanatory
-message. The program also ignores rows which do not have a location entry; these are reported at the top of the log.  
-You can disable certain types of issues with the -d flag.
+message. The program ignores rows which have been marked as verified unless the -a flag is specified.  Rows which do not
+have a location entry are ignored and reported at the top of the log.  You can disable certain types of issues with the
+-d flag.
 
 Also, the first time that this command is run, the program will download data from the Geonames database.  This download
 can take a while, and a busy indicator will be printed to the standard error file to indicate what is happening.  The
 result is automatically cached on disk, but you can force the program to reach out to the Geonames database with the -f
-flag. In either case, an Internet connection is required.
+flag.  In either case, an Internet connection is required.
 
 You will likely want to redirect the standard output file to a file on disk using your shell's functionality.'''
 
@@ -58,6 +59,21 @@ The "list" command prints all the issue types, each on their own line, to the st
 
 DESCRIBE_DESCRIPTION = '''\
 The "describe" command gets a textual description of a specific issue type and prints it to the standard output file.'''
+
+FIX_GEONAMES_DESCRIPTION = '''\
+The "fix-geonames" command fixes the Geonames metadata columns in the provided Revolutionary Networks data file.
+
+The program will print to the standard output a CSV document where the "coordinates", "latitude", "longitude",
+"country_code", "country_name", "admin1", "admin2", and "hierarchy" columns are updated to match the Geonames dataset. 
+It ignores rows which do not have an entry in the "geonameId" column.
+
+Like the "check" command, the first time that this command is run, the program will download data from the Geonames
+database.  This download can take a while, and a busy indicator will be printed to the standard error file to indicate
+what is happening.  The result is automatically cached on disk, but you can force the program to reach out to the
+Geonames database with the -f flag.  In either case, an Internet connection is required.
+
+You will likely want to redirect the standard output file to a file on disk using your shell's functionality.  Do NOT
+redirect to the same file which you are modifying.'''
 
 DOWNLOAD_DESCRIPTION = '''\
 The "download" command downloads necessary data from the Geonames database and stores it such that the program can
@@ -82,16 +98,16 @@ def get_all_geonames_data(force: bool = False, cache: bool = True) -> pd.DataFra
         with spinning_cursor('Loading all Geonames data'):
             data = pd.read_parquet(GEONAMES_CACHE_PATH)
     else:
-        geonames_data = get_geonames(cache=True)
-        country_code_info = get_geonames_country_codes(cache=True)[['ISO', 'Country']].rename(columns={
+        geonames_data = get_geonames(force=force, cache=False)
+        country_code_info = get_geonames_country_codes(force=force, cache=False)[['ISO', 'Country']].rename(columns={
             'ISO': 'country code',
             'Country': 'country name',
         })
-        admin1_info = get_geonames_admin1_info(cache=True)[['code', 'name']].rename(columns={
+        admin1_info = get_geonames_admin1_info(force=force, cache=False)[['code', 'name']].rename(columns={
             'code': 'admin1_key',
             'name': 'admin1 name',
         })
-        admin2_info = get_geonames_admin2_info(cache=True)[['code', 'name']].rename(columns={
+        admin2_info = get_geonames_admin2_info(force=force, cache=False)[['code', 'name']].rename(columns={
             'code': 'admin2_key',
             'name': 'admin2 name',
         })
@@ -115,6 +131,7 @@ def get_all_geonames_data(force: bool = False, cache: bool = True) -> pd.DataFra
 
 def verify(
     path_to_data: str,
+    ignore_verified: bool = True,
     disable: Sequence[str] = (),
     force: bool = False,
     busy: bool = True
@@ -146,7 +163,7 @@ def verify(
         indicator=True,
         suffixes=('', '_geonames')
     )
-    if 'verified' in merged_data.columns:
+    if 'verified' in merged_data.columns and ignore_verified:
         merged_data = merged_data[~merged_data['verified']]
 
     if disable is not None:
@@ -180,6 +197,39 @@ def describe(issue_type: str) -> None:
         print(wrap_text(verifications[issue_type].__doc__, width=shutil.get_terminal_size().columns))
 
 
+def fix_geonames(path_to_data: str, force: bool = False, busy: bool = True) -> None:
+    progress.enabled = busy
+    data = get_revnet_data(path_to_data)
+    data_with_geonames = data.dropna(subset=['geonameId'])
+    data_with_geonames['geonameId'] = data_with_geonames['geonameId'].astype(np.uint64)
+
+    geonames_data = get_all_geonames_data(force=force)
+
+    merged_data = pd.merge(
+        data_with_geonames,
+        geonames_data,
+        left_on='geonameId',
+        right_index=True,
+        how='left',
+        indicator=True,
+        suffixes=('', '_geonames')
+    )
+
+    merged_data['coordinates'] = merged_data.apply(
+        lambda entry: f'{entry['latitude_geonames']:.5f}, {entry['longitude_geonames']:.5f}',
+        axis='columns'
+    )
+    merged_data['latitude'] = merged_data['latitude_geonames']
+    merged_data['longitude'] = merged_data['longitude_geonames']
+    merged_data['country_code'] = merged_data['country code']
+    merged_data['country_name'] = merged_data['country name']
+    merged_data['admin1'] = merged_data['admin1 name']
+    merged_data['admin2'] = merged_data['admin2 name']
+    merged_data['hierarchy'] = merged_data.apply(get_hierarchy_string, axis='columns')
+
+    merged_data[data.columns].to_csv(sys.stdout, index=False)
+
+
 def download(force: bool = False) -> None:
     if GEONAMES_CACHE_PATH and not force:
         print('Geonames data is already cached, use -f/--force to override')
@@ -205,18 +255,25 @@ def main() -> None:
         'check',
         description=text_wrapper(CHECK_DESCRIPTION),
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        help='Perform verifications on a Rotunda dataset file'
+        help='Perform verifications on a Rotunda dataset file',
     )
     check_parser.add_argument(
         'path_to_data',
         help='Path to a CSV file containing Rotunda data',
     )
     check_parser.add_argument(
+        '-a',
+        '--all',
+        dest='ignore_verified',
+        action='store_false',
+        help='Check all dataset entries, even ones which are marked as verified',
+    )
+    check_parser.add_argument(
         '-d',
         '--disable',
         dest='disable',
         action='append',
-        help='Disable a verification on this run'
+        help='Disable a verification on this run',
     )
     check_parser.add_argument(
         '-f',
@@ -252,6 +309,31 @@ def main() -> None:
         help='Issue type to describe'
     )
     describe_parser.set_defaults(func=describe)
+
+    fix_geonames_parser = subparsers.add_parser(
+        'fix-geonames',
+        description='',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        help='Fix the Geonames metadata columns in the dataset'
+    )
+    fix_geonames_parser.add_argument(
+        'path_to_data',
+        help='Path to a CSV file containing Rotunda data',
+    )
+    fix_geonames_parser.add_argument(
+        '-f',
+        '--fetch',
+        dest='force',
+        action='store_true',
+        help='Force fetching Geonames data from the server even if the data is already cached',
+    )
+    fix_geonames_parser.add_argument(
+        '--nobusy',
+        dest='busy',
+        action='store_false',
+        help='Disable the busy indicators printed to the standard error file'
+    )
+    fix_geonames_parser.set_defaults(func=fix_geonames)
 
     download_parser = subparsers.add_parser(
         'download',
