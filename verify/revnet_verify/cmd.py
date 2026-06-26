@@ -200,32 +200,39 @@ def describe(issue_type: str) -> None:
 def fix_geonames(path_to_data: str, force: bool = False, busy: bool = True) -> None:
     progress.enabled = busy
     data = get_revnet_data(path_to_data)
-    data_with_geonames = data.dropna(subset=['geonameId'])
-    data_with_geonames['geonameId'] = data_with_geonames['geonameId'].astype(np.uint64)
+    data['geonameId'] = data['geonameId'].astype(pd.UInt64Dtype())
 
     geonames_data = get_all_geonames_data(force=force)
 
     merged_data = pd.merge(
-        data_with_geonames,
+        data,
         geonames_data,
         left_on='geonameId',
         right_index=True,
         how='left',
+        suffixes=(None, '_geonames')
+    )
+    merged_data = pd.merge(
+        data,
+        merged_data,
+        on='DocumentID',
+        how='left',
         indicator=True,
-        suffixes=('', '_geonames')
+        suffixes=('_nogeonames', None)
     )
 
-    merged_data['coordinates'] = merged_data.apply(
+    mask = pd.notna(merged_data['geonameId'])
+    merged_data.loc[mask, 'coordinates'] = merged_data[mask].apply(
         lambda entry: f'{entry['latitude_geonames']:.5f}, {entry['longitude_geonames']:.5f}',
         axis='columns'
     )
-    merged_data['latitude'] = merged_data['latitude_geonames']
-    merged_data['longitude'] = merged_data['longitude_geonames']
-    merged_data['country_code'] = merged_data['country code']
-    merged_data['country_name'] = merged_data['country name']
-    merged_data['admin1'] = merged_data['admin1 name']
-    merged_data['admin2'] = merged_data['admin2 name']
-    merged_data['hierarchy'] = merged_data.apply(get_hierarchy_string, axis='columns')
+    merged_data.loc[mask, 'latitude'] = merged_data.loc[mask, 'latitude_geonames']
+    merged_data.loc[mask, 'longitude'] = merged_data.loc[mask, 'longitude_geonames']
+    merged_data.loc[mask, 'country_code'] = merged_data.loc[mask, 'country code']
+    merged_data.loc[mask, 'country_name'] = merged_data.loc[mask, 'country name']
+    merged_data.loc[mask, 'admin1'] = merged_data.loc[mask, 'admin1 name']
+    merged_data.loc[mask, 'admin2'] = merged_data.loc[mask, 'admin2 name']
+    merged_data.loc[mask, 'hierarchy'] = merged_data[mask].apply(get_hierarchy_string, axis='columns')
 
     merged_data[data.columns].to_csv(sys.stdout, index=False)
 
