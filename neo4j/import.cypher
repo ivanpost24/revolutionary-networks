@@ -14,7 +14,7 @@
 //    Replace this with your actual raw CSV URL.
 //    Neo4j Aura requires an HTTP(S) URL — file:/// will not work.
 // ---------------------------------------------------------------------------
-// :param csvUrl => 'https://raw.githubusercontent.com/YOUR_USER/YOUR_REPO/main/data/Rotunda_1771-1783_enriched.csv'
+// :param csvUrl => 'https://raw.githubusercontent.com/rotunda-uvap/revolutionary-networks/refs/heads/main/rotunda_data_1771-1783_full.csv'
 
 
 // ---------------------------------------------------------------------------
