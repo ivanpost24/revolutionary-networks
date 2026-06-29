@@ -153,6 +153,19 @@ def verify(
         )
 
     geonames_data = get_all_geonames_data(force=force)
+    expected_geonames_ids = (
+        data.groupby('Location')['geonameId'].agg(lambda x: x.mode().get(0, None)).astype(pd.UInt64Dtype())
+    )
+    data_with_geonames['ExpectedGeonameID'] = pd.Series(None, index=data_with_geonames.index, dtype=pd.UInt64Dtype())
+    data_with_geonames['ExpectedGeonameName'] = pd.Series(None, index=data_with_geonames.index, dtype=str)
+    for location, expected_geonames_id in expected_geonames_ids.items():
+        if pd.notna(expected_geonames_id):
+            data_with_geonames.loc[data_with_geonames['Location'] == location, 'ExpectedGeonameID'] = (
+                expected_geonames_id
+            )
+            data_with_geonames.loc[data_with_geonames['Location'] == location, 'ExpectedGeonameName'] = (
+                geonames_data.loc[expected_geonames_id, 'name']
+            )
 
     merged_data = pd.merge(
         data_with_geonames,

@@ -133,6 +133,8 @@ def verify_recorded_place_name_similar_to_dateline(
     if ALPHA_PATTERN.search(dateline_name) is None:
         return None
     location = get_location_name(entry['Location'])
+    if location.casefold() in dateline_name.casefold() or dateline_name.casefold() in location.casefold():
+        return None
     similarity = SequenceMatcher(None, location, dateline_name).ratio()
     if similarity < similarity_threshold:
         return f'Recorded place name "{location}" not similar to name "{dateline_name}" extracted from deadline'
@@ -275,9 +277,27 @@ def verify_geonames_place_name_similar_to_dateline(
     dateline_name = get_name_from_dateline(entry['OrigDateline'])
     if ALPHA_PATTERN.search(dateline_name) is None:
         return None
+    if any(
+            dateline_name.casefold() in geoname
+            or geoname in dateline_name.casefold()
+            for geoname in map(str.casefold, geonames)
+    ):
+        return None
     similarity = max(SequenceMatcher(None, dateline_name, geoname).ratio() for geoname in geonames)
     if similarity < similarity_threshold:
         return (f'Geonames entity "{geonames[0]}" ({entry['geonameId']}) has no similar name to '
                 f'location "{dateline_name}" extracted from dateline')
     else:
         return None
+
+
+@register('inconsistent-geonames-entity')
+def verify_inconsistent_geonames_entity(entry: pd.Series) -> str | None:
+    """
+    Verify that location labels are being mapped to the same Geonames entities.
+    """
+    if pd.isna(entry['Location']) or pd.isna(entry['geonameId']) or (entry['geonameId'] == entry['ExpectedGeonameID']):
+        return None
+    else:
+        return (f'Inconsistent Geonames entity mapping: {entry['Location']} -> "{entry['name']}" ({entry['geonameId']}); '
+                f'expected "{entry['ExpectedGeonameName']}" ({entry['ExpectedGeonameID']}) because that\'s the most common one')

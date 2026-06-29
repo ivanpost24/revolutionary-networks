@@ -46,7 +46,7 @@ def get_revnet_data(path: str | Path) -> pd.DataFrame:
         path,
         dtype={
             'OrigDateline': str,
-            'geonameId': object,
+            'geonameId': pd.UInt64Dtype(),
             'coordinates': str,
             'latitude': np.float64,
             'longitude': np.float64,
