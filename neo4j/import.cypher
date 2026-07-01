@@ -14,10 +14,7 @@
 //    Replace this with your actual raw CSV URL.
 //    Neo4j Aura requires an HTTP(S) URL — file:/// will not work.
 // ---------------------------------------------------------------------------
-:param csvUrl => 'https://raw.githubusercontent.com/rotunda-uvap/revolutionary-networks/refs/heads/main/rotunda_data_1771-1783_full.csv'
-
-// People lookup (gender + biographical labels), one row per personId.
-:param peopleUrl => 'https://raw.githubusercontent.com/rotunda-uvap/revolutionary-networks/refs/heads/main/neo4j/people_lookup.csv'
+:params {csvUrl: 'https://raw.githubusercontent.com/rotunda-uvap/revolutionary-networks/refs/heads/main/rotunda_data_1771-1783_full.csv', peopleUrl: 'https://raw.githubusercontent.com/rotunda-uvap/revolutionary-networks/refs/heads/main/neo4j/people_lookup.csv'}
 
 
 // ---------------------------------------------------------------------------
