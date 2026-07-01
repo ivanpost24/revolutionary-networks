@@ -16,6 +16,9 @@
 // ---------------------------------------------------------------------------
 :param csvUrl => 'https://raw.githubusercontent.com/rotunda-uvap/revolutionary-networks/refs/heads/main/rotunda_data_1771-1783_full.csv'
 
+// People lookup (gender + biographical labels), one row per personId.
+:param peopleUrl => 'https://raw.githubusercontent.com/rotunda-uvap/revolutionary-networks/refs/heads/main/people_lookup.csv'
+
 
 // ---------------------------------------------------------------------------
 // 1. CONSTRAINTS (uniqueness + existence, also creates indexes)
@@ -67,6 +70,10 @@ FOR (p:Person) ON (p.name);
 
 CREATE INDEX place_name IF NOT EXISTS
 FOR (pl:Place) ON (pl.name);
+
+// Supports filtering people (and their documents) by gender.
+CREATE INDEX person_gender IF NOT EXISTS
+FOR (p:Person) ON (p.gender);
 
 
 // ---------------------------------------------------------------------------
@@ -302,6 +309,22 @@ CALL {
       p.name = pname,
       p.uri = 'https://rotunda.upress.virginia.edu/person/' + pid
 } IN TRANSACTIONS OF 500 ROWS;
+
+
+// ---------------------------------------------------------------------------
+// 11b. ENRICH PERSON NODES WITH GENDER (from people_lookup.csv)
+//      Runs after Persons exist (sections 10-11). MATCH-only: enriches people
+//      who actually appear in the correspondence; never creates new nodes.
+//      Blank gender -> NULL so it doesn't masquerade as a value when filtering.
+// ---------------------------------------------------------------------------
+
+LOAD CSV WITH HEADERS FROM $peopleUrl AS row
+WITH row WHERE row.personID IS NOT NULL AND row.personID <> ''
+MATCH (p:Person {personId: row.personID})
+SET p.gender = CASE
+                 WHEN row.gender IS NULL OR trim(row.gender) = '' THEN NULL
+                 ELSE trim(row.gender)
+               END;
 
 
 // ---------------------------------------------------------------------------
