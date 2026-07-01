@@ -17,7 +17,7 @@
 :param csvUrl => 'https://raw.githubusercontent.com/rotunda-uvap/revolutionary-networks/refs/heads/main/rotunda_data_1771-1783_full.csv'
 
 // People lookup (gender + biographical labels), one row per personId.
-:param peopleUrl => 'https://raw.githubusercontent.com/rotunda-uvap/revolutionary-networks/refs/heads/main/people_lookup.csv'
+:param peopleUrl => 'https://raw.githubusercontent.com/rotunda-uvap/revolutionary-networks/refs/heads/main/neo4j/people_lookup.csv'
 
 
 // ---------------------------------------------------------------------------
